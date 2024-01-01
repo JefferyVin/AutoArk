@@ -1,4 +1,3 @@
-
 from config import config
 import pyautogui
 import pydirectinput
@@ -14,7 +13,6 @@ from Checks import *
 from sleep import sleep
 from input import mouseMoveTo
 import Settings
-from Settings import *
 from abilities import abilities
 
 
@@ -593,8 +591,8 @@ if __name__ == "__main__":
     prGreen("Chaos Script Running")
     Settings.init()
     if os.environ.get("DEBUG"):
-        DEBUG = True
-        prCyan("DEBUG Mode is " + str(DEBUG))
+        Settings.DEBUG = True
+        prCyan("DEBUG Mode is on")
     
-
+    enterChaosfromContentList()
     
