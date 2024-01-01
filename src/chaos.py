@@ -10,25 +10,26 @@ from datetime import date
 import input
 import os
 from colorprint import prCyan, prRed, prGreen
-import Checks
+from Checks import *
 from sleep import sleep
 from input import mouseMoveTo
 import Settings
+from Settings import *
 from abilities import abilities
 
 
 def enterChaosfromContentList():
     """Enter chaos dungeon from content list"""
-    Checks.DetectBlackScreen()
+    DetectBlackScreen()
     while True:
         # Leave chaos dungeon if already inside of one
-        inChaos = Checks.inChaosCheck()
+        inChaos = inChaosCheck()
         if inChaos != None:
             prRed("Still in the last chaos run, quitting ripbozo")
             quitChaos()
             sleep(5000, 6000)
             while True:
-                inTown = Checks.inCityCheck()
+                inTown = inCityCheck()
                 if inTown != None:
                     Settings.states["status"] = "inCity"
                     prGreen("Status: inCity")
@@ -50,7 +51,7 @@ def enterChaosfromContentList():
         sleep(500, 600)
 
         
-        enterButton = Checks.locateCenterOnScreen(
+        enterButton = locateCenterOnScreen(
             "./screenshots/enterButton.png",
             confidence=0.75,
             region=(1334, 754, 120, 60),
@@ -91,7 +92,7 @@ def enterChaosfromContentList():
     
     # repeatedly trying to click on accept button
     while True:
-        acceptButton = Checks.locateCenterOnScreen(
+        acceptButton = locateCenterOnScreen(
             "./screenshots/acceptButton.png",
             confidence=0.75,
             region=config["regions"]["center"],
@@ -184,7 +185,7 @@ def quitChaos():
     checkChaosFinishSplashScreen()
     sleep(100, 200)
     while True:
-        leaveButton = Checks.locateCenterOnScreen(
+        leaveButton = locateCenterOnScreen(
             config["ScreenshotsPath"] + "leave.png",
             grayscale=True,
             confidence=0.7,
@@ -198,14 +199,14 @@ def quitChaos():
             sleep(200, 300)
         else:
             # incity check
-            inTown = Checks.inCityCheck()
+            inTown = inCityCheck()
             if inTown != None:
                 Settings.states["status"] = "inCity"
                 prGreen("Status: inCity")
                 return
         sleep(300, 400)
         # leave ok
-        okButton = Checks.okCheck()
+        okButton = okCheck()
         if okButton != None:
             x, y = okButton
             mouseMoveTo(x=x, y=y)
@@ -245,7 +246,7 @@ def waitForLoading():
             sleep(350, 400)
             sleep(10000, 15000)
             return
-        leaveButton = Checks.locateCenterOnScreen(
+        leaveButton = locateCenterOnScreen(
             config["ScreenshotsPath"] + 
             "leave.png",
             grayscale=True,
@@ -258,7 +259,7 @@ def waitForLoading():
 
 def checkChaosFinishSplashScreen():
     """Check if chaos dungeon is finished and click on ok button if it is"""
-    clearOk = Checks.clearOkCheck()
+    clearOk = clearOkCheck()
     if clearOk != None:
         if Settings.DEBUG:
             prCyan("Clear Ok")
@@ -340,13 +341,13 @@ def SelectChaosLevel():
     sleep(500, 600)
 
 def clearQuest():
-    quest = Checks.locateCenterOnScreen(
+    quest = locateCenterOnScreen(
         config["ScreenshotsPath"] + "quest.png", confidence=0.9, region=(815, 600, 250, 200)
     )
-    leveledup = Checks.locateCenterOnScreen(
+    leveledup = locateCenterOnScreen(
         config["ScreenshotsPath"] + "leveledup.png", confidence=0.9, region=(815, 600, 250, 200)
     )
-    gameMenu = Checks.locateCenterOnScreen(
+    gameMenu = locateCenterOnScreen(
         config["ScreenshotsPath"] + "gameMenu.png",
         confidence=0.95,
         region=config["regions"]["center"],
@@ -379,7 +380,7 @@ def clearQuest():
 
 def doAuraRepair(forced):
     # Check if repair needed
-    if forced or Checks.locateCenterOnScreen(
+    if forced or locateCenterOnScreen(
         "./screenshots/repair.png",
         grayscale=True,
         confidence=0.4,
@@ -402,10 +403,10 @@ def doAuraRepair(forced):
         sleep(2500, 2600)
 
 def useAbilities():
-    Checks.diedCheck()
-    Checks.healthCheck()
+    diedCheck()
+    healthCheck()
     
-    if (Settings.states["status"] == "floor1" or Settings.states["status"] == "floor2") and Checks.checkPortal():
+    if (Settings.states["status"] == "floor1" or Settings.states["status"] == "floor2") and checkPortal():
         calculateMinimapRelative(Settings.states["moveToX"], Settings.states["moveToY"])
         enterPortal()
         return "portal"
@@ -415,7 +416,7 @@ def useAbilities():
         checkCDandCast(Settings.states["abilityScreenshots"][i])
 
 def checkCDandCast(ability):
-    if (Checks.locateCenterOnScreen(ability["image"], region=config["regions"]["abilities"])):
+    if (locateCenterOnScreen(ability["image"], region=config["regions"]["abilities"])):
         if ability["directional"] == True:
             mouseMoveTo(x=Settings.states["moveToX"], y=Settings.states["moveToY"])
         else:
@@ -452,7 +453,7 @@ def checkCDandCast(ability):
             pydirectinput.press(ability["key"])
             start_ms = int(time.time_ns() / 1000000)
             now_ms = int(time.time_ns() / 1000000)
-            while Checks.locateCenterOnScreen(
+            while locateCenterOnScreen(
                 ability["image"],
                 region=config["regions"]["abilities"],
             ):
@@ -592,11 +593,8 @@ if __name__ == "__main__":
     prGreen("Chaos Script Running")
     Settings.init()
     if os.environ.get("DEBUG"):
-        Settings.DEBUG = True
-        prCyan("DEBUG Mode is on")
+        DEBUG = True
+        prCyan("DEBUG Mode is " + str(DEBUG))
     
-    enterChaosfromContentList()
-    waitForLoading()
-    saveAbilitiesScreenshots()
-    doFloor1()
+
     
