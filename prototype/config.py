@@ -31,7 +31,7 @@ config = {
     "enableLopang": True,  # NOTE: you need to setup bifrost locations properly for this, at very specific locations. Look up ^
     "enableGuildDonation": True,  # please make sure all your characters have a guild
     "enableRapport": False,  # NOTE: you need to setup bifrost no3 infront of a rapport NPC
-    "floor3Mode": False,  # only enable if you ONLY want to run infinite floor3 clearing
+    "floor3Mode": True,  # only enable if you ONLY want to run infinite floor3 clearing
     # Setup your characters below:
     # can setup UP TO 9 characters for daily chaos/lopang/guild stuff
     # however your main must be in character 0 to 5 (just for re-connect back after disconnection happens)

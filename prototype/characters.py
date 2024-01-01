@@ -1,9 +1,9 @@
 characters = [
         {
             "index": 0,
-            "class": "sorceress",
-            "ilvl-endless": 1610,
-            "ilvl-aor": 1610,
+            "class": "scouter",
+            "ilvl-endless": 1415,
+            "ilvl-aor": 1475,
             "spring": False,
             "bleak": False,
             "lopang": False,
